@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import StandardGalleryImage from "../components/StandardGalleryImage";
 import BeforeAfterImage from "../components/BeforeAfterImage";
+import Lightbox from "../components/Lightbox";
 import { BEFORE_AFTER_BY_CATEGORY } from "../data/beforeAfterGalleries";
 
 const CATEGORIES = {
@@ -42,6 +43,13 @@ const BEFORE_AFTER_SLUGS = new Set([
 
 function GalleryCategoryPage() {
   const { category } = useParams();
+  const [lightbox, setLightbox] = useState(null);
+
+  const openLightbox = useCallback((src, alt) => {
+    setLightbox({ src, alt: alt || "Gallery image" });
+  }, []);
+
+  const closeLightbox = useCallback(() => setLightbox(null), []);
 
   if (!SLUGS.includes(category)) {
     return <Navigate to="/galleries" replace />;
@@ -54,6 +62,13 @@ function GalleryCategoryPage() {
 
   return (
     <div className="gallery-category-page">
+      <Lightbox
+        isOpen={!!lightbox}
+        src={lightbox?.src}
+        alt={lightbox?.alt}
+        onClose={closeLightbox}
+      />
+
       <header className="gallery-category-page__header">
         <h1 className="gallery-category-page__title">{meta.title}</h1>
         <p className="gallery-category-page__intro">{meta.intro}</p>
@@ -79,6 +94,14 @@ function GalleryCategoryPage() {
                   beforeImage={entry.beforeImage}
                   afterImage={entry.afterImage}
                   caption={entry.caption}
+                  onImageClick={(src, phase) =>
+                    openLightbox(
+                      src,
+                      `${phase === "before" ? "Before" : "After"} — ${
+                        entry.caption?.trim() || "Tattoo"
+                      }`
+                    )
+                  }
                 />
               </div>
             ))}
@@ -93,6 +116,9 @@ function GalleryCategoryPage() {
               key={`${category}-${index}`}
               image={entry.image}
               caption={entry.caption}
+              onImageClick={(src) =>
+                openLightbox(src, entry.caption || "Gallery image")
+              }
             />
           ))}
         </div>
