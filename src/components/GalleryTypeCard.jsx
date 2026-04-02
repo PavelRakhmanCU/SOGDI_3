@@ -1,15 +1,20 @@
-//GalleryTypeCard will be used on the Galleries page to allow the user to select the type of gallery they would like to navigate to
-//Gallery type selection: color, grayscale, coverup, post-mastectomy reconstruction tattoos
 import React from "react";
-import { useNavigate } from "react-router-dom";
-const GalleryTypeCard = ({ galleryType, path }) => {
-    const navigate = useNavigate();
-    return(
-        <div className="gallery-type-card">
-<h4>{galleryType}</h4>
-            <button onClick={() => navigate(path)}>View Gallery</button>
-        </div>
-    )
+import { Link } from "react-router-dom";
+
+/**
+ * Hub card: navigates to a gallery category route.
+ * Props: title, description, path
+ */
+function GalleryTypeCard({ title, description, path }) {
+  return (
+    <Link className="gallery-type-card" to={path} role="listitem">
+      <h2 className="gallery-type-card__title">{title}</h2>
+      <p className="gallery-type-card__description">{description}</p>
+      <span className="gallery-type-card__cta" aria-hidden="true">
+        View gallery
+      </span>
+    </Link>
+  );
 }
 
-export default GalleryTypeCard
+export default GalleryTypeCard;

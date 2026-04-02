@@ -1032,3 +1032,145 @@ body {
     min-width: 16rem;
   }
 }
+
+/* ——— Galleries hub ——— */
+.galleries-page {
+  flex: 1;
+  width: 100%;
+  min-height: calc(100vh - var(--site-header-height));
+  background-color: var(--Charcoal);
+  padding: clamp(1rem, 4vw, 2rem) clamp(0.75rem, 3vw, 1.5rem)
+    clamp(2.5rem, 6vw, 4rem);
+}
+
+.galleries-page__header {
+  max-width: min(52rem, 100%);
+  margin: 0 auto clamp(1.5rem, 4vw, 2.25rem);
+  padding: clamp(1rem, 3vw, 1.5rem);
+  border-radius: 10px;
+  background: rgba(5, 5, 0, 0.45);
+  border: var(--ring-border-dark);
+  outline: var(--ring-outline);
+  outline-offset: var(--ring-outline-offset);
+}
+
+.galleries-page__title {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.45rem, 4vw, 1.95rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--alto);
+  text-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.55),
+    0 0 24px rgba(0, 0, 0, 0.2);
+}
+
+.galleries-page__lead {
+  margin: 0;
+  font-size: clamp(0.95rem, 2.6vw, 1.08rem);
+  line-height: 1.55;
+  color: var(--SilverChalice);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+  max-width: 62ch;
+}
+
+.galleries__grid {
+  max-width: min(72rem, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1rem, 3vw, 1.35rem);
+  list-style: none;
+  padding: 0;
+}
+
+@media (min-width: 480px) {
+  .galleries__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 900px) {
+  .galleries__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.35rem 1.5rem;
+  }
+}
+
+@media (min-width: 1100px) {
+  .galleries__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.gallery-type-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 12rem;
+  padding: clamp(1rem, 3vw, 1.35rem);
+  text-decoration: none;
+  color: inherit;
+  border-radius: 10px;
+  background: rgba(5, 5, 0, 0.45);
+  border: var(--ring-border-dark);
+  outline: var(--ring-outline);
+  outline-offset: var(--ring-outline-offset);
+  transition:
+    transform 0.2s ease,
+    outline-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.gallery-type-card:hover {
+  background: rgba(5, 5, 0, 0.58);
+  outline-color: rgba(255, 255, 255, 0.75);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+}
+
+.gallery-type-card:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: 3px;
+}
+
+.gallery-type-card__title {
+  margin: 0 0 0.65rem;
+  font-size: clamp(1.05rem, 2.6vw, 1.2rem);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: 0.02em;
+  color: var(--alto);
+  text-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.55),
+    0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.gallery-type-card__description {
+  flex: 1;
+  margin: 0 0 1rem;
+  font-size: clamp(0.88rem, 2.2vw, 0.98rem);
+  line-height: 1.55;
+  color: var(--SilverChalice);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+
+.gallery-type-card__cta {
+  margin-top: auto;
+  align-self: flex-start;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--Slate);
+  padding: 0.4rem 0.65rem;
+  border-radius: 6px;
+  background: rgba(5, 5, 0, 0.5);
+  border: 1px solid rgba(168, 180, 176, 0.25);
+}
+
+.gallery-type-card:hover .gallery-type-card__cta {
+  color: var(--alto);
+  border-color: rgba(168, 180, 176, 0.45);
+}
