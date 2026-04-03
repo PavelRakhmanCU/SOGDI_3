@@ -4,6 +4,9 @@ import axios from "axios";
 import { useContext } from "react";
 import { GlobalContext } from "../context/GlobalContext";
 
+/** Formspree form endpoint — same as previous site version */
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/xnngrbnj";
+
 const EMAIL_PATTERN = {
   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
   message: "Please enter a valid email address.",
@@ -32,7 +35,8 @@ function Booking() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    reset,
+    formState: { errors, isSubmitting },
     getValues,
   } = useForm({ mode: "onBlur" });
 
@@ -56,29 +60,39 @@ function Booking() {
 
   const onSubmit = async (data) => {
     const formData = new FormData();
-    data.subject = `New Booking request from ${data.fullName}`;
-    formData.append("subject", data.subject);
+
+    // Match previous Formspree field names (including `ity` for city)
+    const subject = `New Booking request from ${data.fullName}`;
+    formData.append("subject", subject);
     formData.append("full-name", data.fullName);
     formData.append("height", data.height);
     formData.append("email", data.email);
     formData.append("phone", data.phone);
-    formData.append("city", data.city);
+    formData.append("ity", data.city);
     formData.append("design-description", data.designDescription);
-    if (data.designFile?.[0])
+
+    if (data.designFile && data.designFile.length > 0) {
       formData.append("design-file", data.designFile[0]);
-    if (data.designFile1?.[0])
+    }
+    if (data.designFile1 && data.designFile1.length > 0) {
       formData.append("design-file-1", data.designFile1[0]);
-    if (data.designFile2?.[0])
+    }
+    if (data.designFile2 && data.designFile2.length > 0) {
       formData.append("design-file-2", data.designFile2[0]);
-    if (data.designFile3?.[0])
+    }
+    if (data.designFile3 && data.designFile3.length > 0) {
       formData.append("design-file-3", data.designFile3[0]);
+    }
+
     try {
-      await axios.post(`https://formspree.io/f/xnngrbnj`, formData, {
+      const response = await axios.post(FORMSPREE_ENDPOINT, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
+      console.log(response);
       alert("Form submitted successfully!");
+      reset();
     } catch (error) {
       console.error(error.response);
       if (error.response) {
@@ -307,8 +321,13 @@ function Booking() {
           </div>
 
           <div className="booking-form__actions">
-            <button type="submit" className="booking-form__submit cta-button">
-              Submit booking request
+            <button
+              type="submit"
+              className="booking-form__submit cta-button"
+              disabled={isSubmitting}
+              aria-busy={isSubmitting}
+            >
+              {isSubmitting ? "Sending…" : "Submit booking request"}
             </button>
           </div>
         </form>

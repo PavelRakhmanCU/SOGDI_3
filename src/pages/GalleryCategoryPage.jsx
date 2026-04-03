@@ -3,7 +3,9 @@ import { Navigate, useParams } from "react-router-dom";
 import StandardGalleryImage from "../components/StandardGalleryImage";
 import BeforeAfterImage from "../components/BeforeAfterImage";
 import Lightbox from "../components/Lightbox";
+import GrayscaleGallery from "../components/GrayscaleGallery";
 import { BEFORE_AFTER_BY_CATEGORY } from "../data/beforeAfterGalleries";
+import { GRAYSCALE_GALLERY_IMAGES } from "../data/grayscaleGallery";
 
 const CATEGORIES = {
   color: {
@@ -26,10 +28,10 @@ const CATEGORIES = {
   },
 };
 
-/** Each entry: { image: string (url), caption: string } — color / grayscale */
+/** Each entry: { image: string (url), caption: string } — color; grayscale uses `grayscaleGallery.js` */
 export const GALLERY_IMAGES = {
   color: [],
-  grayscale: [],
+  grayscale: GRAYSCALE_GALLERY_IMAGES,
   coverup: [],
   "post-mastectomy-reconstruction": [],
 };
@@ -109,6 +111,8 @@ function GalleryCategoryPage() {
         )
       ) : items.length === 0 ? (
         <p className="gallery-category-page__empty">Gallery images coming soon.</p>
+      ) : category === "grayscale" ? (
+        <GrayscaleGallery items={items} onOpenLightbox={openLightbox} />
       ) : (
         <div className="gallery-category-page__grid">
           {items.map((entry, index) => (
