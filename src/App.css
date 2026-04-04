@@ -93,6 +93,49 @@ body {
   outline-offset: 3px;
 }
 
+.header__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.header__cycle {
+  position: relative;
+  width: 100%;
+  min-height: 2.15em;
+  margin: 0;
+}
+
+.header__cycle-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  margin: 0;
+  font-size: clamp(0.68rem, 2.8vw, 0.78rem);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1.35;
+  color: var(--SilverChalice);
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 0.65s ease,
+    transform 0.65s ease;
+  pointer-events: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.header__cycle-line--active {
+  opacity: 1;
+  transform: translateY(0);
+  z-index: 1;
+}
+
 /* ——— Navbar ——— */
 .navbar {
   display: flex;
@@ -240,8 +283,14 @@ body {
     display: contents;
   }
 
-  .header .logo {
+  .header__brand {
     grid-area: logo;
+    justify-self: start;
+    align-self: center;
+    max-width: min(22rem, 36vw);
+  }
+
+  .header .logo {
     justify-self: start;
   }
 

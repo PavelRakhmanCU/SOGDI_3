@@ -98,7 +98,7 @@ function GeneralInfo() {
                   <strong>Full-day session:</strong> $2,200
                 </li>
                 <li>
-                  <strong>Hourly rate:</strong> $300/hour (for smaller or time-based
+                  <strong>Hourly rate:</strong> $350/hour (for smaller or time-based
                   projects)
                 </li>
                 <li>Payment is due immediately after each session</li>
