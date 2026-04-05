@@ -1,6 +1,6 @@
 /**
- * Cover-up gallery content is defined in `src/data/beforeAfterGalleries.js`
- * and rendered by `GalleryCategoryPage` at `/galleries/coverup`.
+ * Cover-up gallery: copy lives in `src/data/galleryImages.js` (`GALLERY_CATEGORY_META.coverup.body`).
+ * Rendered by `GalleryCategoryPage` at `/galleries/coverup`.
  */
 export default function Gallery3() {
   return null;

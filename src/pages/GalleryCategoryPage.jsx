@@ -1,47 +1,19 @@
 import React, { useState, useCallback } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import StandardGalleryImage from "../components/StandardGalleryImage";
-import BeforeAfterImage from "../components/BeforeAfterImage";
 import Lightbox from "../components/Lightbox";
-import GrayscaleGallery from "../components/GrayscaleGallery";
-import { BEFORE_AFTER_BY_CATEGORY } from "../data/beforeAfterGalleries";
-import { GRAYSCALE_GALLERY_IMAGES } from "../data/grayscaleGallery";
+import {
+  GALLERY_CATEGORY_META,
+  GALLERY_IMAGES,
+} from "../data/galleryImages";
 
-const CATEGORIES = {
-  color: {
-    title: "Color tattoos",
-    intro: "Selected color work — new pieces are added here over time.",
-  },
-  grayscale: {
-    title: "Grayscale tattoos",
-    intro: "Black and grey work — selected pieces from the studio.",
-  },
-  coverup: {
-    title: "Cover-up tattoos",
-    intro:
-      "Before and after sets documenting cover-up work — each card shows the same piece in sequence.",
-  },
-  "post-mastectomy-reconstruction": {
-    title: "Post-mastectomy reconstruction tattoos",
-    intro:
-      "Restorative tattooing — before and after documentation with care and respect.",
-  },
-};
+const SLUGS = Object.keys(GALLERY_CATEGORY_META);
 
-/** Each entry: { image: string (url), caption: string } — color; grayscale uses `grayscaleGallery.js` */
-export const GALLERY_IMAGES = {
-  color: [],
-  grayscale: GRAYSCALE_GALLERY_IMAGES,
-  coverup: [],
-  "post-mastectomy-reconstruction": [],
-};
-
-const SLUGS = Object.keys(CATEGORIES);
-
-const BEFORE_AFTER_SLUGS = new Set([
-  "coverup",
-  "post-mastectomy-reconstruction",
-]);
+/** Split stored body copy into paragraphs (one block per non-empty line, as in source files). */
+function galleryBodyParagraphs(body) {
+  if (!body?.trim()) return [];
+  return body.split("\n").map((p) => p.trim()).filter(Boolean);
+}
 
 function GalleryCategoryPage() {
   const { category } = useParams();
@@ -57,10 +29,9 @@ function GalleryCategoryPage() {
     return <Navigate to="/galleries" replace />;
   }
 
-  const meta = CATEGORIES[category];
+  const meta = GALLERY_CATEGORY_META[category];
   const items = GALLERY_IMAGES[category] ?? [];
-  const beforeAfterItems = BEFORE_AFTER_BY_CATEGORY[category] ?? [];
-  const isBeforeAfterGallery = BEFORE_AFTER_SLUGS.has(category);
+  const isGrayscale = category === "grayscale";
 
   return (
     <div className="gallery-category-page">
@@ -73,57 +44,49 @@ function GalleryCategoryPage() {
 
       <header className="gallery-category-page__header">
         <h1 className="gallery-category-page__title">{meta.title}</h1>
-        <p className="gallery-category-page__intro">{meta.intro}</p>
+        {meta.intro ? (
+          <p className="gallery-category-page__intro">{meta.intro}</p>
+        ) : null}
       </header>
 
-      {isBeforeAfterGallery ? (
-        beforeAfterItems.length === 0 ? (
-          <p className="gallery-category-page__empty">
-            Gallery pairs coming soon.
-          </p>
-        ) : (
-          <div
-            className="gallery-category-page__grid gallery-category-page__grid--before-after"
-            role="list"
-          >
-            {beforeAfterItems.map((entry, index) => (
-              <div
-                className="gallery-category-page__before-after-cell"
-                key={`${category}-ba-${index}`}
-                role="listitem"
-              >
-                <BeforeAfterImage
-                  beforeImage={entry.beforeImage}
-                  afterImage={entry.afterImage}
-                  caption={entry.caption}
-                  onImageClick={(src, phase) =>
-                    openLightbox(
-                      src,
-                      `${phase === "before" ? "Before" : "After"} — ${
-                        entry.caption?.trim() || "Tattoo"
-                      }`
-                    )
-                  }
-                />
-              </div>
-            ))}
-          </div>
-        )
-      ) : items.length === 0 ? (
+      {meta.body ? (
+        <div className="gallery-category-page__body">
+          {galleryBodyParagraphs(meta.body).map((para, i) => (
+            <p key={`body-${i}`} className="gallery-category-page__body-p">
+              {para}
+            </p>
+          ))}
+        </div>
+      ) : null}
+
+      {items.length === 0 ? (
         <p className="gallery-category-page__empty">Gallery images coming soon.</p>
-      ) : category === "grayscale" ? (
-        <GrayscaleGallery items={items} onOpenLightbox={openLightbox} />
       ) : (
-        <div className="gallery-category-page__grid">
+        <div
+          className={
+            isGrayscale
+              ? "grayscale-gallery gallery-category-page__grid gallery-category-page__grid--grayscale"
+              : "gallery-category-page__grid"
+          }
+          role="list"
+        >
           {items.map((entry, index) => (
-            <StandardGalleryImage
-              key={`${category}-${index}`}
-              image={entry.image}
-              caption={entry.caption}
-              onImageClick={(src) =>
-                openLightbox(src, entry.caption || "Gallery image")
-              }
-            />
+            <div
+              className={isGrayscale ? "grayscale-gallery__cell" : undefined}
+              key={`${category}-${entry.image}-${index}`}
+              role="listitem"
+            >
+              <StandardGalleryImage
+                image={entry.image}
+                caption={entry.caption}
+                onImageClick={(src) =>
+                  openLightbox(
+                    src,
+                    entry.caption?.trim() || meta.title || "Gallery image"
+                  )
+                }
+              />
+            </div>
           ))}
         </div>
       )}

@@ -1,2 +1,1 @@
-//Gallery with color images
-import StandardGalleryImage from "../components/StandardGalleryImage";
+// Color gallery — data and layout: `GalleryCategoryPage` + `src/data/galleryImages.js`
